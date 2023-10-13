@@ -51,7 +51,7 @@ formulario.addEventListener("submit", function(event) {
         alerta += "Introduce nombre entre 1 y 30 caracteres.\n";
     }
     if((!email.endsWith(".com") && !email.endsWith(".es")) || !email.includes("@")){
-        alerta+= "Error validación" + email +".\n"; 
+        alerta+= "Error validación " + email +".\n"; 
     }
     if (mensaje.length == 0) {
         alerta += "Háblanos de ti primero.\n";
@@ -65,9 +65,10 @@ formulario.addEventListener("submit", function(event) {
     if (usuarios == null) usuarios = [];
 
     if(alerta.length != 0){
+
         Swal.fire({
             icon: 'error',
-            title: 'Vaya... \n',
+            title: 'Vaya...',
             text: alerta,
           }); //imprime mensaje final de error
     } else {
@@ -113,6 +114,7 @@ borrarUsuario.addEventListener("submit", function(event) {
             boolean = true;
             usuarios.splice(i, 1);
             i = -1; //vuelve a empezar el bucle
+
         }  
     }
     pintarUsuarios(usuarios);

@@ -30,7 +30,7 @@ function pintarUsuarios(usuarios) {
                                 <p><b>Nombre:</b> ${usuarios[i].nombre}</p>
                                 <p><b>Email:</b> ${usuarios[i].email}</p>
                                 <p><b>Mensaje:</b> ${usuarios[i].mensaje}</p>
-                                <p><b>Imagen URL:</b> ${usuarios[i].imagen}</p>
+                                <p id="wrap"><b>Imagen URL:</b> ${usuarios[i].imagen}</p>
                             </article>`;
         }
         article.innerHTML = articleTemp;
@@ -48,7 +48,7 @@ formulario.addEventListener("submit", function(event) {
         alerta += "Introduce nombre entre 1 y 30 caracteres.\n";
     }
     if((!email.endsWith(".com") && !email.endsWith(".es")) || !email.includes("@")){
-        alerta+= "Error validación" + email +".\n"; 
+        alerta+= "Error validación " + email +".\n"; 
     }
     if (mensaje.length == 0) {
         alerta += "Háblanos de ti primero.\n";
@@ -62,7 +62,12 @@ formulario.addEventListener("submit", function(event) {
     if (usuarios == null) usuarios = [];
 
     if(alerta.length != 0){
-        alert(alerta); //imprime mensaje final de error
+        event.preventDefault();
+        Swal.fire({
+            icon: 'error',
+            title: 'Vaya...',
+            text: alerta,
+          }); //imprime mensaje final de error
     } else {
         nuevoUsuario.nombre = nombre;
         nuevoUsuario.email = email;
@@ -105,6 +110,7 @@ borrarUsuario.addEventListener("submit", function(event) {
         if (usuarios[i].nombre == user) {
             boolean = true;
             usuarios.splice(i, 1);
+            i = -1;
         }  
     }
     pintarUsuarios(usuarios);

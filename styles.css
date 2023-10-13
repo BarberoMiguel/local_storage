@@ -1,0 +1,94 @@
+*{
+    box-sizing: border-box;
+}
+  
+html {
+      scroll-behavior: smooth;
+      font-size: 15px;
+}
+
+body {
+    margin: 0;
+    background-color: #23235C;
+}
+
+main{
+    background-color: rgba(157, 206, 248, 0.476);
+    width:70vw;
+    margin: 5%  auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    font-size: 3rem;
+}
+
+form{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+}
+
+legend {
+    font-size: 2rem;
+}
+
+fieldset {
+    display: flex;
+    flex-direction: column;
+    width: 60vw;
+    font-size: 1.2rem;
+}
+
+#submit{
+    background-color: #ADD7C6;
+    padding: 0.45em;
+    margin :0.45em auto;
+    border-radius: 0.25em;
+    font-size: 1.5rem;
+}
+
+#submit:active{
+    background-color: #C8E4D9;
+}
+
+#usuarios {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.usuario {
+    background-color: rgb(107, 184, 251);
+    margin: 20px 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#botones {
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}
+
+.black {
+    color: white;
+    background-color: black;
+}
+
+.black:active{
+    background-color: grey;
+}
+
+.black:hover, #submit:hover {
+    cursor: pointer;
+}
+
+

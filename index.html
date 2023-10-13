@@ -4,8 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>local_storage</title>
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    
+    <main>
+        <h1>Base de datos:</h1>
+        <form id="nuevoUsuario" action="./index.html">
+            <fieldset>
+                <legend>Nuevo usuario</legend>
+
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" placeholder="Escribe tu nombre" required>
+                <label for="correo">Dirección de correo:</label>
+                <input type="email" id="correo" required placeholder="Escribe tu correo">
+                <label for="mensaje">Mensaje:</label>
+                <textarea name="mensaje" id="mensaje" cols="30" rows="10" required placeholder="Algo que te describa"></textarea>
+                <label for="imagen">Imagen (url):</label>
+                <input type="text" name= "imagen" id="imagen" required placeholder="Escribe la url de tu imagen">
+            
+            </fieldset>
+            <button type="submit" id ="submit">Enviar respuestas</button>
+        </form>
+        <section id="botones">
+            <button id="borrar" class="black">Borrar base de datos</button>
+            <form id="borrarUsuario">
+                <input type="text" name="usuario" id="usuario" placeholder="Intruduce un usuario">
+                <button type="submit" class="black">Borrar usuario</button>
+            </form>
+        </section>
+        <section id="usuarios">
+
+        </section>
+    </main>
+    <script src="./script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

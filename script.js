@@ -23,14 +23,14 @@ pintarUsuarios(usuarios);
 
 //función de pintado
 function pintarUsuarios(usuarios) {
-    let articleTemp = "";
+    let articleTemp = ""; //crea artículo temporal guarda el resultado de ello en un artículo en la seccion id= usuarios. Mete tantos usuarios como haya. 
         for (let i = 0; i < usuarios.length; i++) {
             articleTemp += `<article class="usuario">
                                 <h2>Usuario ${i+1}:</h2>
                                 <p><b>Nombre:</b> ${usuarios[i].nombre}</p>
                                 <p><b>Email:</b> ${usuarios[i].email}</p>
                                 <p><b>Mensaje:</b> ${usuarios[i].mensaje}</p>
-                                <p><b>Imagen URL:</b> ${usuarios[i].imagen}</p>
+                                <p id="wrap"><b>Imagen URL:</b> ${usuarios[i].imagen}</p>
                             </article>`;
         }
         article.innerHTML = articleTemp;
@@ -38,6 +38,9 @@ function pintarUsuarios(usuarios) {
 
 //validación de formulario
 formulario.addEventListener("submit", function(event) {
+
+    event.preventDefault()
+
     let alerta = "";
     let nombre = event.target.nombre.value;
     let email = event.target.correo.value;
@@ -62,7 +65,11 @@ formulario.addEventListener("submit", function(event) {
     if (usuarios == null) usuarios = [];
 
     if(alerta.length != 0){
-        alert(alerta); //imprime mensaje final de error
+        Swal.fire({
+            icon: 'error',
+            title: 'Vaya... \n',
+            text: alerta,
+          }); //imprime mensaje final de error
     } else {
         nuevoUsuario.nombre = nombre;
         nuevoUsuario.email = email;
@@ -105,16 +112,19 @@ borrarUsuario.addEventListener("submit", function(event) {
         if (usuarios[i].nombre == user) {
             boolean = true;
             usuarios.splice(i, 1);
+            i = -1; //vuelve a empezar el bucle
         }  
     }
     pintarUsuarios(usuarios);
-    if (!boolean) {
+    
+    if(!boolean){
         Swal.fire({
             icon: 'error',
-            title: 'Vaya...',
-            text: 'No hay ningún usuario con ese nombre',
+            title: 'Vaya... \n',
+            text: 'No hay ningún usuario con ese nombre...',
           });
     }
+
 
     //guarda la variable en local storage
     usuarios = JSON.stringify(usuarios);

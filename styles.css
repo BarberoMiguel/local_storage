@@ -68,6 +68,8 @@ fieldset {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 60vw;
+    overflow-x: scroll;
 }
 
 #botones {
@@ -76,6 +78,10 @@ fieldset {
     flex-direction: row;
     justify-content: center;
     gap: 20px;
+}
+
+#wrap{
+ 
 }
 
 .black {

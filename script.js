@@ -8,36 +8,71 @@ let nuevoUsuario = {
     nombre: "",
     email: "",
     mensaje: "",
-    imagen:""
+    url:""
 }
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCEqJ_0d7NVIDOlEatnR7V1Nuoz7PL3J4s",
+    authDomain: "fir-storage-244aa.firebaseapp.com",
+    projectId: "fir-storage-244aa",
+    storageBucket: "fir-storage-244aa.appspot.com",
+    messagingSenderId: "692819421711",
+    appId: "1:692819421711:web:2a536ff1ee6104531d517a"
+  };
+
+firebase.initializeApp(firebaseConfig);// Inicializaar app Firebase
+
+const db = firebase.firestore();// db representa mi BBDD //inicia Firestore
+ 
 let sectionUsuarios = document.getElementById("usuarios");
 let article = document.createElement("article");
 article.id = "articleUsuarios";
 sectionUsuarios.appendChild(article);
 
-let formulario = document.getElementById("nuevoUsuario");
-let usuarios = localStorage.getItem("usuarios");
-usuarios = JSON.parse(usuarios);
-if (usuarios == null) usuarios = [];
-pintarUsuarios(usuarios);
+//muestra los usuarios actuales
+
+const readAll = () => {
+    db.collection("users")
+      .get()
+      .then((querySnapshot) => {
+        article.innerHTML = "";
+        querySnapshot.forEach((doc) => {
+          pintarUsuario(doc.data().nombre, doc.data().email, doc.data().mensaje, doc.data().url, doc.id)
+        });
+  
+      })
+      .catch(() => console.log('Error reading documents'));
+  };
+  
+  readAll()
+
 
 //función de pintado
-function pintarUsuarios(usuarios) {
+function pintarUsuario(nombre, email, mensaje, url, id) {
     let articleTemp = "";
-        for (let i = 0; i < usuarios.length; i++) {
             articleTemp += `<article class="usuario">
-                                <h2>Usuario ${i+1}:</h2>
-                                <p><b>Nombre:</b> ${usuarios[i].nombre}</p>
-                                <p><b>Email:</b> ${usuarios[i].email}</p>
-                                <p><b>Mensaje:</b> ${usuarios[i].mensaje}</p>
-                                <p id="wrap"><b>Imagen URL:</b> ${usuarios[i].imagen}</p>
+                                <p><b>Nombre:</b> ${nombre}</p>
+                                <p><b>Email:</b> ${email}</p>
+                                <p><b>Mensaje:</b> ${mensaje}</p>
+                                <p id="wrap"><b>Imagen URL:</b> ${url}</p>
+                                <p><b>Id:</b> ${id}</p>
                             </article>`;
-        }
-        article.innerHTML = articleTemp;
+        article.innerHTML += articleTemp;
 }
+// guardar usuario;
+const crearUsuario = (nuevoUsuario) => {
+    db.collection("users")
+      .add(nuevoUsuario)
+      .then((docRef) => {
+        readAll();
+      })
+      .catch((error) => console.error("Error adding document: ", error));
+  };
 
 //validación de formulario
+let formulario = document.getElementById("nuevoUsuario");
 formulario.addEventListener("submit", function(event) {
+    event.preventDefault();
     let alerta = "";
     let nombre = event.target.nombre.value;
     let email = event.target.correo.value;
@@ -57,10 +92,6 @@ formulario.addEventListener("submit", function(event) {
         alerta += "Introduce una url válida.\n";
     }
 
-    usuarios = localStorage.getItem("usuarios");
-    usuarios = JSON.parse(usuarios);
-    if (usuarios == null) usuarios = [];
-
     if(alerta.length != 0){
         event.preventDefault();
         Swal.fire({
@@ -72,59 +103,65 @@ formulario.addEventListener("submit", function(event) {
         nuevoUsuario.nombre = nombre;
         nuevoUsuario.email = email;
         nuevoUsuario.mensaje = mensaje;
-        nuevoUsuario.imagen = imagen;
-        usuarios.push(nuevoUsuario); //añade un nuevo usuario al localStorage 
-        
-        //pintar usuarios
-        pintarUsuarios(usuarios);
+        nuevoUsuario.url = imagen;
 
-        //guarda la variable en local storage
-        usuarios = JSON.stringify(usuarios);
-        localStorage.setItem("usuarios", usuarios);
-
+        crearUsuario(nuevoUsuario);
+        event.target.nombre.value = "";
+        event.target.correo.value = "",
+        event.target.mensaje.value = "";
+        event.target.imagen.value = "";
     }
 });
+
+const borrarUsuarios = () => {
+    db.collection("users")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            db.collection('users').doc(doc.id).delete();
+        });
+      }).then(data => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: "todos los usuarios eliminados",
+          });
+        readAll()})
+      .catch(() => console.log('Error borrando documentos'));
+      
+};
 
 //manejar botón borrar
 let borrar = document.getElementById("borrar");
 borrar.addEventListener("click", function() {
-    let borrado = [];
-    borrado = JSON.stringify(borrado);
-    localStorage.setItem("usuarios", borrado);
-    let articleTemp = "";
-    document.getElementById("articleUsuarios").innerHTML = articleTemp;
+    borrarUsuarios();
 });
+
+async function borrarUsuarioPorNombre(nombre) {
+    db.collection("users")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            if (doc.data().nombre == nombre) {
+                db.collection('users').doc(doc.id).delete();
+            }
+          });
+      }).then(data => {
+        Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: "todos los usuarios con ese nombre eliminados",
+      });
+      readAll()})
+      .catch(() => console.log('Error borrando usuarios'));
+};
+
 
 //manejar botón borrar usuario 
 let borrarUsuario = document.getElementById("borrarUsuario");
 borrarUsuario.addEventListener("submit", function(event) {
     event.preventDefault();
-
-    usuarios = localStorage.getItem("usuarios");
-    usuarios = JSON.parse(usuarios);
-    if (usuarios == null) usuarios = [];
-
-    let user = event.target.usuario.value;
-    let boolean = false;
-    for (let i = 0; i < usuarios.length; i++) {
-        if (usuarios[i].nombre == user) {
-            boolean = true;
-            usuarios.splice(i, 1);
-            i = -1;
-        }  
-    }
-    pintarUsuarios(usuarios);
-    if (!boolean) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Vaya...',
-            text: 'No hay ningún usuario con ese nombre',
-          });
-    }
-
-    //guarda la variable en local storage
-    usuarios = JSON.stringify(usuarios);
-    localStorage.setItem("usuarios", usuarios);
+    borrarUsuarioPorNombre(event.target.usuario.value);
 });
 
 
